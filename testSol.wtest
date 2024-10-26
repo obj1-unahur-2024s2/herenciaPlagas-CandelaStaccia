@@ -1,0 +1,96 @@
+import elementosSol.*
+import plagasSol.*
+
+describe "tests de plagas y elementos SOLUCION" {
+
+  test "El hogar recibe un ataque de una plaga de mosquitos" {
+    const hogar = new Hogar(mugre = 50, confort = 50)
+    const mosquitos = new Mosquitos(poblacion = 12)
+
+    mosquitos.atacar(hogar)
+
+    assert.equals(62, hogar.mugre())
+    assert.notThat(hogar.esBueno())
+    assert.equals(13.2, mosquitos.poblacion())
+    //assert.that(mosquitos.transmiteEnfermedades())
+  }
+
+  test "El hogar recibe un ataque de una plaga de mosquitos que no puede transmitir enfermedades" {
+    const hogar = new Hogar(mugre = 50, confort = 50)
+    const mosquitos = new Mosquitos(poblacion = 5)
+
+    mosquitos.atacar(hogar)
+
+    assert.equals(55, hogar.mugre())
+    assert.notThat(hogar.esBueno())
+    assert.equals(5.5, mosquitos.poblacion())
+    assert.notThat(mosquitos.transmiteEnfermedades())
+  }
+
+  test "La huerta recibe un ataque de cucarachas" {
+    const huerta = new Huerta(produccion = 12)
+    const cucarachas = new Cucarachas(poblacion = 20, pesoPromedio = 10)
+
+    cucarachas.atacar(huerta)
+
+    assert.equals(1, huerta.produccion())
+    assert.notThat(huerta.esBueno())
+    assert.equals(12, cucarachas.pesoPromedio())
+    assert.equals(22, cucarachas.poblacion())
+    assert.that(cucarachas.transmiteEnfermedades())
+  }
+
+  test "La huerta recibe un ataque de cucarachas que no pueden transmitir enfermedades" {
+    const huerta = new Huerta(produccion = 12)
+    const cucarachas = new Cucarachas(poblacion = 5, pesoPromedio = 2)
+
+    cucarachas.atacar(huerta)
+
+    assert.equals(11.75, huerta.produccion())
+    assert.notThat(huerta.esBueno())
+    assert.equals(4, cucarachas.pesoPromedio())
+    assert.equals(5.5, cucarachas.poblacion())
+    assert.notThat(cucarachas.transmiteEnfermedades())
+  }
+
+  test "La mascota recibe un ataque de pulgas y garrapatas" {
+    const mascota = new Mascota(salud = 500)
+    const pulgas = new Pulgas(poblacion = 18)
+    const garrapatas = new Garrapatas(poblacion = 12)
+
+    pulgas.atacar(mascota)
+    garrapatas.atacar(mascota)
+
+    assert.equals(500 - (36 + 24), mascota.salud())
+    assert.that(mascota.esBueno())
+    assert.equals(19.8, pulgas.poblacion())
+    assert.equals(14.4, garrapatas.poblacion())
+    assert.that(pulgas.transmiteEnfermedades())
+    assert.that(garrapatas.transmiteEnfermedades())
+  }
+
+  test "La mascota recibe un ataque de pulgas y garrapatas que no pueden transmitir enfermedades" {
+    const mascota = new Mascota(salud = 500)
+    const pulgas = new Pulgas(poblacion = 8)
+    const garrapatas = new Garrapatas(poblacion = 8)
+
+    pulgas.atacar(mascota)
+    garrapatas.atacar(mascota)
+
+    assert.equals(500, mascota.salud())
+    assert.that(mascota.esBueno())
+    assert.equals(8.8, pulgas.poblacion())
+    assert.equals(9.6, garrapatas.poblacion())
+    assert.notThat(pulgas.transmiteEnfermedades())
+    assert.notThat(garrapatas.transmiteEnfermedades())
+  }
+
+  test "Test de barrio con hogar, huerta y mascota" {
+    const hogar = new Hogar(mugre = 50, confort = 50)
+    const huerta = new Huerta(produccion = 12)
+    const mascota = new Mascota(salud = 500)
+    const barrio = new Barrio(elementos = [hogar, huerta, mascota])
+
+    assert.notThat(barrio.esCopado())
+  }
+}

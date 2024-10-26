@@ -1,9 +1,62 @@
-import example.pepita
+import elementos.*
+import plagas.*
 
-describe "group of tests for pepita" {
+describe "tests de plagas y elementos" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+
+  test "El hogar recibe un ataque de una plaga de mosquitos" {
+    const hogar = new Hogar(nivelMugre = 50, confort = 50)
+    const mosquitos = new PlagaMosquitos(poblacion = 12)
+
+    mosquitos.atacarA(hogar)
+
+    assert.equals(63.2, hogar.nivelMugre())
+    assert.notThat(hogar.esBueno())
   }
 
-}
+  test "La huerta recibe un ataque de cucarachas" {
+    const huerta = new Huerta(capacidadProduccion = 12)
+    const cucarachas = new PlagaCucarachas(poblacion = 27, pesoPromedio = 10)
+
+    cucarachas.atacarA(huerta)
+
+    assert.equals(0.515, huerta.capacidadProduccion())
+    assert.notThat(huerta.esBueno())
+    assert.equals(12, cucarachas.pesoPromedio())
+  }
+
+  test "La huerta recibe un ataque de cucarachas que no pueden transmitir enfermedades" {
+    const huerta = new Huerta(capacidadProduccion = 12)
+    const cucarachas = new PlagaCucarachas(poblacion = 5, pesoPromedio = 2)
+
+    cucarachas.atacarA(huerta)
+
+    assert.equals(11.725, huerta.capacidadProduccion())
+    assert.notThat(huerta.esBueno())
+    assert.equals(4, cucarachas.pesoPromedio())
+  }
+
+  test "La mascota recibe un ataque de pulgas y garrapatas" {
+    const mascota = new Mascota(nivelDeSalud = 500)
+    const pulgas = new PlagaPulgas(poblacion = 18)
+    const garrapatas = new PlagaGarrapatas(poblacion = 12)
+
+    pulgas.atacarA(mascota)
+    garrapatas.atacarA(mascota)
+
+    assert.equals(500 - (39.6 + 28.8), mascota.nivelDeSalud())
+    assert.that(mascota.esBueno())
+  }
+
+  test "La mascota recibe un ataque de pulgas y garrapatas que no pueden transmitir enfermedades" {
+    const mascota = new Mascota(nivelDeSalud = 500)
+    const pulgas = new PlagaPulgas(poblacion = 8)
+    const garrapatas = new PlagaGarrapatas(poblacion = 8)
+
+    pulgas.atacarA(mascota)
+    garrapatas.atacarA(mascota)
+
+    assert.equals(500, mascota.nivelDeSalud())
+    assert.that(mascota.esBueno())
+  }
+} //completo en el de testSol
